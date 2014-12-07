@@ -4,21 +4,9 @@ In the world of competitive football, there are many football games. Each of the
 
 When dig deeper, within each team, we have a set of players, they are basically in an employee - company - project relationship. Each player will have their own personal data, same as a team. Scoring is also recorded for each player and team to serve the ranking purpose.
 
-To be more specific, we have players playing for a team:
-
-+ Story 1
-+ Story 2
-+ Story 3
-+ Story 4
-+ Story 5
-
-
-Examples:
-+ We store person social security number, full name and date of birth.
-+ Project are define by a project number, have a title and a description. They 
-also have a specific duration with start and end date.
-+ For each project, multiple person can work for or be manager of it. They 
-sometimes can be attributed a specific role within the project (e.g. "designer", 
-"database architect", "software engineer", etc.). 
-+ A person can work for many projects at the same time. We need to know how 
-many hours a person works for a specific project.
+To be more specific, we have players playing for a team and:
++ Each player has an ID, which is the social security number, first name, last name as compulsory info, additional info a player should have is his/her birth date, place of birth, nationality and the specialized position the player play at.
++ A team is defined by an ID, has a regular name and an abbreviated short name, the arena name as their home, the name of the coach and whether or not it's a national team. Abundant info such as city as league can also be added.
++ A team can play in a game (football match) and the match belong to a specific season in a specific league, additional info that may exists is the scores of both teams in the match, along with the points they may earn and the date of the game and the day of the game within the season.
++ City (place) can also have association with a country.
++ The scores of a game can be recorded using a dedicated table with the required game id and the player id, who scored. Relevant info are the time at which the goal is scored, also whether or not it's an own goal.

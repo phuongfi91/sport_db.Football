@@ -7,8 +7,8 @@
 
 ##3.2. Arguments for the specifications
 
-We've chosen to cerate a table for each entity, which makes the database better scalable for future changes.
-We’ve specified the _scores_ table to have a reference on _player_ and _team_, because if we would have only the player reference in the _scores_, we could still follow up which team scores, but since we support the use case, that a player can change the team, the player would take his scores to the new team. Therefor the _scores_ table has a reference to the _team_ and the _player_.
+We've chosen to create a table for each entity, which makes the database better scalable for future changes.
+We’ve specified the _scores_ table to have a reference on _player_ and _team_, because if we would have only the player reference in the _scores_, we could still follow up which team scores, but since we support the use case, that a player can change the team, the player would take his scores to the new team. Therefore the _scores_ table has a reference to the _team_ and the _player_.
 We have the mapping table _teams_league_season_, so we can follow up which team was at which time in which season. So we support the storing of multiple football seasons.
 
 ##3.3. Mapping to RDBMS (MySQL database)

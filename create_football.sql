@@ -82,10 +82,6 @@ create table football.game
 	away_team_id bigint not null references football.team(id),
 	season_id bigint not null references football.season(id),
 	league_id bigint not null references football.league(id),
-	home_team_score tinyint,
-	away_team_score tinyint,
-	home_team_points tinyint default 0,
-	away_team_points tinyint default 0,
 	game_date date,
 	game_day tinyint,
 	primary key (id)
@@ -96,7 +92,7 @@ create table football.scores
 	id bigint not null auto_increment,
 	game_id bigint not null references football.game(id),
 	player_id bigint not null references football.player(id),
-	season_id bigint not null references football.season(id),
+	team_id bigint not null references football.team(id),
 	own_goal tinyint default 0,
 	minute tinyint,
 	primary key (id)
@@ -117,33 +113,24 @@ create table football.team_league_season
 create view football.scorerrank as
 select 	s.player_id, 
 		sum(case when s.own_goal=0 then 1 else 0 end) as scored_goals,
-		s.season_id,
+		g.season_id,
 		g.league_id
 from football.scores as s
 inner join football.game as g
 on s.game_id = g.id
-inner join football.player as p
-on p.id = s.player_id
-inner join football.team as t
-on t.id = p.team_id
-inner join football.team_league_season as tls
-on t.id = tls.team_id and tls.season_id = s.season_id
-group by g.season_id, tls.league_id, s.player_id;
+group by s.player_id, g.season_id
+order by scored_goals desc;
 
-create view football.rank_by_season as
-select 	g.game_day, 
-		t.id as team_id,
-		sum(case when g.home_team_id=t.id then g.home_team_points else g.away_team_points end) as points,
-		sum(case when g.home_team_id=t.id then g.home_team_score else g.away_team_score end) as goals_for,
-		sum(case when g.away_team_id=t.id then (g.home_team_score) else (g.away_team_score) end) as goals_against,
-		sum(case when g.home_team_id=t.id and g.home_team_points=3 then 1 else 0 end) as won,
-		sum(case when g.home_team_id=t.id and g.home_team_points=1 then 1 else 0 end) as drawn,
-		sum(case when (g.home_team_id=t.id and g.away_team_points=3) or (g.away_team_id=t.id and g.home_team_points=3) then 1 else 0 end) as lost,
-		g.season_id, tls.league_id
+create view football.scores_for_game as
+select 	
+        g.id as game_id,
+        g.season_id,
+        g.league_id,
+        g.home_team_id,
+        g.away_team_id,
+        sum(case when g.home_team_id=s.team_id then 1 else 0 end) as home_team_score,
+        sum(case when g.away_team_id = s.team_id then 1 else 0 end) as away_team_score
 from football.game as g
-inner join football.team t
-on t.id = g.away_team_id or t.id = g.home_team_id
-inner join football.team_league_season as tls
-on t.id = tls.team_id and tls.season_id = g.season_id
-group by t.id, g.season_id, tls.league_id
-order by points desc, goals_for desc;
+inner join football.scores s
+on s.game_id = g.id
+group by g.id;
